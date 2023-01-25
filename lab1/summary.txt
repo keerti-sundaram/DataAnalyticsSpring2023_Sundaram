@@ -1,4 +1,7 @@
 Exercise 1 and 2 are in the lab1.R file.
 
 Histograms in the lab1 folder:
-1. hist1
+1. histogram1: EPI histogram
+2. histogram2: EPI histogram, updated sequence
+3. histogram3: EPI histogram, with lines
+
