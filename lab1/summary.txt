@@ -1,1 +1,4 @@
+Exercise 1 and 2 are in the lab1.R file.
 
+Histograms in the lab1 folder:
+1. hist1
