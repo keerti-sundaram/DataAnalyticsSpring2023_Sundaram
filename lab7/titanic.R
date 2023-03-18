@@ -14,6 +14,7 @@ plot(treeTitanic)
 
 cforest(Survived ~., data=Titanic, controls=cforest_control(mtry=2, mincriterion=0))
 
+#resource used: https://www.geeksforgeeks.org/hierarchical-clustering-in-r-programming/
 help(hclust)
 dist_mat <- dist(Titanic, method = 'euclidean')
 dist_mat
