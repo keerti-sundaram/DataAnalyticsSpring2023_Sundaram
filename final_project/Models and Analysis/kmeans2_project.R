@@ -1,17 +1,10 @@
 gdp <- read.csv("/Users/keertisundaram/Dropbox/Data Analytics/gdp_csv.csv", header=T)
+#knn imputation
 library(VIM)
 gdp_imp <- kNN(gdp[-length(gdp)], k=5)
 gdp_imp <- subset(gdp_imp, select=Country:X2020)
 grand_total <- rowSums(gdp_imp[-1])
 gdp_imp$Grand.Total <- grand_total
-avg_values <- data.frame(gdp_imp$Country, rowMeans(gdp_imp[-1]))
-colnames(avg_values) <- c("Country", "Average")
-#using sum of values
-hist(gdp_imp$Grand.Total, col='#25A476', main="Sum of Percent of GDP spent on Health Care over 2000-2020")
-boxplot(gdp_imp$Grand.Total, main="Sum of Percent of GDP spent on Health Care over 2000-2020" )
-#using avg of values
-hist(avg_values$Average, col='#25A476', main="Averages of Percent of GDP spent on Health Care over 2000-2020")
-boxplot(avg_values$Average, main="Averages of Percent of GDP spent on Health Care over 2000-2020" )
 
 library(ISLR)
 library(cluster)
@@ -31,6 +24,9 @@ print(totalClusters$cluster)
 clusplot(gdp_imp,totalClusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0, main = "Percent of GDP Spent on Health Care 2000-2020")
 df <- data.frame(gdp_imp$Country, totalClusters$cluster)
 df
+
+#attempting the similar group-split as the COPD data, did not end up using in the analysis 
+
 #split into groups
 group1<- data.frame(gdp_imp$Country,gdp_imp[,c(2:6)])
 group2<- data.frame(gdp_imp$Country, gdp_imp[,c(7:11)])
@@ -39,19 +35,23 @@ group4<- data.frame(gdp_imp$Country, gdp_imp[,c(17:22)])
 group4
 fviz_nbclust(group4[-1], kmeans, method="wss") #bend at 4
 
+#group 1
 group1Clusters <- kmeans(group1[-1], 4, nstart = 20) 
 clusplot(group1,group1Clusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0, main = "Percent of GDP Spent on Health Care 2000-2004")
 group1_clusters <- data.frame(gdp_imp$Country, group1Clusters$cluster)
 group1_clusters
 
+#group 2
 group2Clusters <- kmeans(group2[-1], 4, nstart = 20) 
 clusplot(group2,group2Clusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0,main = "Percent of GDP Spent on Health Care 2005-2009")
 group2_clusters <- data.frame(gdp_imp$Country, group2Clusters$cluster)
 
+#group 3
 group3Clusters <- kmeans(group3[-1], 4, nstart = 20) 
 clusplot(group3,group3Clusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0, main = "Percent of GDP Spent on Health Care 2010-2014")
 group3_clusters <- data.frame(gdp_imp$Country, group3Clusters$cluster)
 
+#group 4
 group4Clusters <- kmeans(group4[-1], 4, nstart = 20) 
 clusplot(group4,group4Clusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0, main = "Percent of GDP Spent on Health Care 2015-2020")
 group4_clusters <- data.frame(gdp_imp$Country, group4Clusters$cluster)
@@ -99,6 +99,7 @@ cat(Countries_GT_2, sep="\n")
 cat(Countries_GT_3, sep="\n")
 cat(Countries_GT_4, sep="\n")
 
+#finding most similar clusters
 setdiff(Countries_GT_1, Countries_G1_1)
 setdiff(Countries_GT_2, Countries_G1_2)
 setdiff(Countries_GT_3, Countries_G1_3)
@@ -124,6 +125,7 @@ setdiff(Countries_GT_2, Countries_G4_2)
 setdiff(Countries_GT_3, Countries_G4_3)
 setdiff(Countries_GT_4, Countries_G4_4)
 
+#getting similar clusters (countries that didn't switch among the years)
 clus1 <- (intersect((intersect((intersect(Countries_G1_1, Countries_G2_4)), Countries_G3_3)), Countries_G4_1))
 clus1
 clus2 <- (intersect((intersect((intersect(Countries_G1_2, Countries_G2_2)), Countries_G3_1)), Countries_G4_2))
@@ -138,16 +140,8 @@ cat(clus2, sep="\n")
 cat(clus3, sep="\n")
 cat(clus4, sep="\n")
 
-clus1
-nrow(df[df$Cluster == 1,])
+#finding countries that switched
 countries_clustered <- c(clus1, clus2, clus3, clus4)
 total_countries <- gdp_imp$Country
 #42 countries "switched"
 cat((setdiff(total_countries, countries_clustered)), sep="\n")
-str(total_countries)
-str(countries_clustered)
-
-group1_clusters[group1_clusters$Country == "Uruguay", ]
-group2_clusters[group2_clusters$Country == "Uruguay", ]
-group3_clusters[group3_clusters$Country == "Uruguay", ]
-group4_clusters[group4_clusters$Country == "Uruguay", ]
