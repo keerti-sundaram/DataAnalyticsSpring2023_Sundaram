@@ -13,16 +13,20 @@ copd <- data.frame(copd_imp$Country, temp)
 grand_total <- rowSums(copd[-1])
 copd$Grand.Total <- grand_total
 colnames(copd)[1] = "Country"
+#ordering to make sure comparisons are correct
 pm2.5 <- pm2.5[order(pm2.5$Country),]
 copd <- copd[order(copd$Country),]
 View(copd)
 View(pm2.5)
+#adding a grand total col to PM2.5 data
 grand_total <- rowSums(pm2.5[-1])
 pm2.5$Grand.Total <- grand_total
 
+#taking the subset of the data needed for the linear regression
 pm2.5 <- subset(pm2.5, Country %in% c('Brazil', 'Canada', 'Colombia', 'France', 'Germany', 'Italy', 'Japan', 'Kazakhstan', 'Mexico', 'Philippines', 'Russian Federation', 'South Africa', 'Spain', 'T√ºrkiye', 'Ukraine', 'United States of America'))
 copd <- subset(copd, Country %in% c('Brazil', 'Canada', 'Colombia', 'France', 'Germany', 'Italy', 'Japan', 'Kazakhstan', 'Mexico', 'Philippines', 'Russian Federation', 'South Africa', 'Spain', 'Turkey', 'Ukraine', 'United States of America'))
 
+#year based approach
 df_2010 <- data.frame(copd$Country, pm2.5$X2010, copd$X2010)
 colnames(df_2010) <- c('Country', 'pm2.5', 'copd')
 lm_2010 <- lm(copd ~ pm2.5, data = df_2010)
@@ -73,6 +77,7 @@ colnames(df_2019) <- c('Country', 'pm2.5', 'copd')
 lm_2019 <- lm(copd ~ pm2.5, data = df_2019)
 summary(lm_2019)
 
+#country based approach
 df <- data.frame(t(pm2.5[pm2.5$Country == 'Brazil', ]), t(copd[copd$Country == 'Brazil', ]))
 colnames(df) <- c('pm2.5', 'copd')
 df <- df[-1,] 
@@ -201,17 +206,14 @@ df$copd <- as.numeric(df$copd)
 US_lm <- lm(copd ~ pm2.5, data = df)
 summary(US_lm)
 
-gdp <- read.csv("/Users/keertisundaram/Dropbox/Data Analytics/gdp_csv.csv", header=T)
-gdp <- subset(gdp, Country %in% c('Brazil', 'Canada', 'Colombia', 'France', 'Germany', 'Italy', 'Japan', 'Kazakhstan', 'Mexico', 'Philippines', 'Russian Federation', 'South Africa', 'Spain', 'T√ºrkiye', 'Ukraine', 'United States of America'))
-View(gdp)
-View(pm2.5)
-
+#looking at ranks of the countries in terms of COPD, GDP, and PM2.5 data
 copd2 <- read.csv("/Users/keertisundaram/Dropbox/Data Analytics/mortality_csv.csv", header=T)
 copd_imp2 <- kNN(copd2[-length(copd2)], k=5)
 copd2 <- subset(copd_imp2, select=Country:X2020)
 grand_total <- rowSums(copd2[-1])
 copd2$Grand.Total <- grand_total
 
+#COPD rankings
 copd2 <- copd2[order(copd2$Grand.Total, decreasing = TRUE),]
 View(copd2)
 rank <- 1:104
@@ -226,6 +228,7 @@ gdp2 <- subset(gdp_imp2, select=Country:X2020)
 grand_total <- rowSums(gdp2[-1])
 gdp2$Grand.Total <- grand_total
 
+#GDP rankings
 gdp2 <- gdp2[order(gdp2$Grand.Total, decreasing = TRUE),]
 View(gdp2)
 df_rank_gdp <- data.frame(gdp2$Country, rank)
@@ -233,6 +236,7 @@ df_rank_gdp
 rank_16_gdp <- subset(df_rank_gdp, gdp2.Country %in% c('Brazil', 'Canada', 'Colombia', 'France', 'Germany', 'Italy', 'Japan', 'Kazakhstan', 'Mexico', 'Philippines', 'Russian Federation', 'South Africa', 'Spain', 'Turkey', 'Ukraine', 'United States of America'))
 rank_16_gdp
 
+#PM2.5 rankings
 pm2.5_2 <- read.csv("/Users/keertisundaram/Dropbox/Data Analytics/Final_Project/pm2.5.csv", header=T)
 grand_total <- rowSums(pm2.5_2[-1])
 pm2.5_2$Grand.Total <- grand_total
