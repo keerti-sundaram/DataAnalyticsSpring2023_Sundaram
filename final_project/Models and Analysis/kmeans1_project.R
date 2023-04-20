@@ -21,34 +21,41 @@ df <- data.frame(copd_imp$Country, totalClusters$cluster)
 df
 clusplot(copd_imp,totalClusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0,  main = "Number of Deaths Due to COPD from 2000-2020")
 
+#splitting up the data into 4 groups
 group1<- data.frame(copd_imp$Country, copd_imp[,c(2:6)])
 group2<- data.frame(copd_imp$Country, copd_imp[,c(7:11)])
 group3<- data.frame(copd_imp$Country, copd_imp[,c(12:16)])
 group4<- data.frame(copd_imp$Country, copd_imp[,c(17:22)])
 
+#group 1: 2000-2004
 group1Clusters <- kmeans(group1[-1], 4, nstart = 20) 
 clusplot(group1,group1Clusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0, main = "Number of Deaths Due to COPD from 2000-2004")
 group1_clusters <- data.frame(copd_imp$Country, group1Clusters$cluster)
 group1_clusters
 
+#group 2: 2005-2009
 group2Clusters <- kmeans(group2[-1], 4, nstart = 20) 
 clusplot(group2,group2Clusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0, main = "Number of Deaths Due to COPD from 2005-2009")
 group2_clusters <- data.frame(copd_imp$Country, group2Clusters$cluster)
 
+#group 3: 2010-2014
 group3Clusters <- kmeans(group3[-1], 4, nstart = 20) 
 clusplot(group3,group3Clusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0, main = "Number of Deaths Due to COPD from 2010-2014")
 group3_clusters <- data.frame(copd_imp$Country, group3Clusters$cluster)
 
+#group 4: 2015-2020
 group4Clusters <- kmeans(group4[-1], 4, nstart = 20) 
 clusplot(group4,group4Clusters$cluster, color = TRUE, shade = TRUE, labels = 4, lines = 0, main = "Number of Deaths Due to COPD from 2015-2020")
 group4_clusters <- data.frame(copd_imp$Country, group4Clusters$cluster)
 
+#labeling data frames for each group with country and it's corresponding cluster
 colnames(df) <- c("Country", "Cluster")
 colnames(group1_clusters) <- c("Country", "Cluster")
 colnames(group2_clusters) <- c("Country", "Cluster")
 colnames(group3_clusters) <- c("Country", "Cluster")
 colnames(group4_clusters) <- c("Country", "Cluster")
 
+#grand total clustering 
 Countries_GT_1 <- (df[df$Cluster == 1,])$Country
 Countries_GT_2 <- (df[df$Cluster == 2,])$Country
 Countries_GT_3  <- (df[df$Cluster == 3,])$Country
@@ -78,11 +85,13 @@ Countries_G4_2 <-  (group4_clusters[group4_clusters$Cluster == 2,])$Country
 Countries_G4_3 <-  (group4_clusters[group4_clusters$Cluster == 3,])$Country
 Countries_G4_4 <-  (group4_clusters[group4_clusters$Cluster == 4,])$Country
 
+#listing countries in each grand total cluster
 cat(Countries_GT_1, sep="\n")
 cat(Countries_GT_2, sep="\n")
 cat(Countries_GT_3, sep="\n")
 cat(Countries_GT_4, sep="\n")
 
+#finding similarities/differences between each group
 setdiff(Countries_GT_1, Countries_G1_3)
 setdiff(Countries_GT_2, Countries_G1_4)
 setdiff(Countries_GT_3, Countries_G1_1)
@@ -103,6 +112,7 @@ setdiff(Countries_G3_2, Countries_G4_1)
 setdiff(Countries_G3_3, Countries_G4_3)
 setdiff(Countries_G3_4, Countries_G4_4)
 
+#finding the most similar clusters (i.e. countries that did not "switch" clusters)
 clus1 <- (intersect((intersect((intersect(Countries_G1_1, Countries_G2_2)), Countries_G3_4)), Countries_G4_4))
 
 clus2 <- (intersect((intersect((intersect(Countries_G1_2, Countries_G2_3)), Countries_G3_1)), Countries_G4_2))
@@ -117,14 +127,9 @@ cat(clus2, sep="\n")
 cat(clus3, sep="\n")
 cat(clus4, sep="\n")
 
+#finding which countries switched
 countries_clustered <- c(clus1, clus2, clus3, clus4)
 total_countries <- copd_imp$Country
 #14 countries "switched"
 cat((setdiff(total_countries, countries_clustered)), sep="\n")
 
-group1_clusters[group1_clusters$Country == "Turkey", ]
-group2_clusters[group2_clusters$Country == "Turkey", ]
-group3_clusters[group3_clusters$Country == "Turkey", ]
-group4_clusters[group4_clusters$Country == "Turkey", ]
-
-Countries_GT_1
