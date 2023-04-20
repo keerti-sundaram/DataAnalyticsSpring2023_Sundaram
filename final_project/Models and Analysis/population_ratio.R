@@ -8,14 +8,17 @@ grand_total <- rowSums(copd_imp[-1])
 copd_imp$Grand.Total <- grand_total
 copd <- copd_imp
 
+#read in population data
 population <- read.csv("/Users/keertisundaram/Dropbox/Data Analytics/Final_Project/population.csv", header=T)
 View(population)
 copd <- copd[order(copd$Country),]
 population <- population[order(population$Country),]
 copd_no_labels <- copd_imp[-1]
+#creating ratio data frame
 ratios <- cbind(population[1], round(copd_no_labels[-length(copd_no_labels)]/population[-1],5))
 View(ratios)
 
+#ratio clustering
 library(ISLR)
 library(cluster)
 #find optimal number of clusters
