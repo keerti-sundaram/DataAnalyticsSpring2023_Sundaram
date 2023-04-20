@@ -29,8 +29,7 @@ no_labels_pm2.5 <- pm2.5[-1]
 boxplot(no_labels_pm2.5[-length(no_labels_pm2.5)], main = "PM2.5 Concentrations of all Countries over 2010-2019")
 hist(pm2.5$Grand.Total, main = "Grand Total PM2.5 Concentrations")
 
-#to analyze distributions
+#creating density plots to analyze distributions
 plot(density(copd_imp$Grand.Total), main="Density Plot of COPD Grand Total")
 plot(density(gdp_imp$Grand.Total), main= "Density Plot of GDP Grand Total")
 plot(density(pm2.5$Grand.Total), main= "Density Plot of PM2.5 Grand Total")
-
